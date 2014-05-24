@@ -1,0 +1,13 @@
+after cloning repository run
+
+git submodule init
+git submodule update
+
+to download webui.
+
+needs these python modules (at least):
+bottle
+gevent
+gevent-websocket
+pyzmq
+
