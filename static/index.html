@@ -1,24 +1,89 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
 <title>Low Temp Logger</title>
 
+<!-- Headers from Foundation example -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" href="css/foundation.css" />
+<script src="/js/modernizr.js"></script>
 
-<script type="text/javascript" src="/extern/jquery-1.9.1.js"></script>
+<!-- Using jQuery -->
+<script type="text/javascript" src="/js/jquery-2.1.1.min.js"></script>
+<!-- Foundation for a responsive layout -->
+<script type="text/javascript" src="/js/foundation.min.js"></script>
+<!-- fastclick for mobile users -->
+<script type="text/javascript" src="/js/fastclick.js"></script>
+<!-- flot for plots -->
+<script type="text/javascript" src="/js/jquery.flot.min.js"></script> 
+<!-- handlebars for templates -->
+<script type="text/javascript" src="/js/handlebars-1.3.0.js"></script>
+<!-- and webui to talk with python -->
 <script type="text/javascript" src="/webui.js"></script>
-<script type="text/javascript" src="/ltlog.js"></script>
+
+
+<!-- ltlog.js contains main javascript code -->
+<script type="text/javascript" src="ltlog.js"></script>
+<script type="text/javascript" src="measurement.js"></script>
 
 <link rel="stylesheet" type="text/css" href="/style.css" />
 
+
+<!-- -->
+<!-- Templates to render HTML from Javscript using handlebars.js -->
+<!-- -->
+
+<script type="text/x-handlebars-template", id="measurements_template">
+<!--<form>-->
+<ul class="off-canvas-list" >
+    {{#names}}
+    <li> <label for="{{.}}-check">{{.}}</label><input id="{{.}}-check" type="checkbox" checked="true" /></li>
+    {{/names}}
+</ul>
+<!--</form>-->
+</script> 
+    
+<script type="text/x-handlebars-template", id="plots_template">
+{{#names}}
+<div>
+<div id="{{.}}-ylabel" class="ylabel">Y label</div>
+<div id="{{.}}-plot" class="plot"></div>
+</div>
+{{/names}}
+</script>
 </head>
+    
+<!-- -->
+<!-- BEGIN BODY -->
+<!-- -->
+    
 <body>
+    <div class="off-canvas-wrap" data-offcanvas>
+        <div class="inner-wrap">
+            <nav class="tab-bar">
+                <section class="left-small">
+                    <a class="left-off-canvas-toggle menu-icon" href="#"><span></span></a>
+                </section>
 
-hi
+                <section class="middle tab-bar-section">
+                    <h1 class="title">LT Log</h1>
+                </section>
+            </nav>
+            
+            <aside class="left-off-canvas-menu" id="measurements">
+            </aside>
 
-<p id="thisp"></p>
+            <div id="plots">
+            </div>
 
-<button id="butt">Click ME</button>
+            <a class="exit-off-canvas"></a>
+        </div>
+        
+    </div>
 
+    
 </body>
+    
 </html>

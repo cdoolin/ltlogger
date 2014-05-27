@@ -4,10 +4,14 @@ import zmq.green as zmq
 GO = True
 
 #
-#
+#  Measurement Database
 #
 
-
+measurements = {
+    'T1': [295., 200., 180., 160, 100., 90., 92., 88., 75.,],
+    'T2': [294., 188., 178., 172., 150., 132., 133., 110.],
+    'Valve': [1, 1, 1, 0, 1, 0, 0, 1, 1, 1, 0, 0, 0],
+}
 
 
 #
@@ -80,17 +84,21 @@ def logserver():
 # WebUI Stuff
 #
 
+@action
+def get_measurements():
+    ui.update_measurements(names=measurements.keys())
 
 @action
-def click(word=""):
-    print("did: %s" % (word))
+def get_data(name):
+    if name in measurements.keys():
+        ui.update_data(name=name, data=measurements[name])
+    else:
+        ui.error(text="no measurement \"%s\"" % name)
 
-    uis.hello(text="hi")
+@action
+def connected():
+    get_measurements()
 
-
-@every(3)
-def saysthings():
-    uis.hello(text="3 secs")
 
 
 # configure webserver on port 2172

@@ -1,0 +1,7 @@
+div.plot {
+    width: 100%;
+/*    border: 1px solid #ddd;*/
+/*    padding: 10px;*/
+    margin-bottom: 20px;
+    height: 200px;
+}
