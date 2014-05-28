@@ -11,3 +11,8 @@ gevent
 gevent-websocket
 pyzmq
 
+
+on windows w/ anaconda:
+pip install bottle
+(from cmd)
+

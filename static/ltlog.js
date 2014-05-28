@@ -23,7 +23,6 @@ $(function () {
         // a list of measurement names being logged
         // expect args.names - list of all types of measurements
 
-        
         $("#measurements").html(templates.measurements({names: args.names}));
         $("#plots").html(templates.plots({names: args.names}));
         
@@ -41,13 +40,6 @@ $(function () {
             console.log("got data for unknown measurement \"" + args.name + "\"");
         }
     };
-    
-//    webui.onopen = function () {
-//        webui.call("get_measurements", {});
-//    };
-
-    
-    
 });
 
 

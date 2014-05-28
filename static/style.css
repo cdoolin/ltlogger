@@ -10,7 +10,7 @@ div.plot-container {
     box-shadow: 3px 3px 15px #9f9f9f;
 }
 
-div.plot {
+div.flot {
     margin-left: 1.3em;
     height: 100%;
 /*    border: 1px solid #ddd;*/
@@ -39,7 +39,7 @@ div.plot-container .close:active  {
 }
 
 #measurements {
-    margin-top: 1.8em;
+/*    margin-top: 0em;*/
     -webkit-user-select: none;
     -moz-user-select: none;
     user-select: none;
@@ -47,11 +47,11 @@ div.plot-container .close:active  {
 
 #measurements .enable {
 /*    float: left;*/
-    
-    margin: 1em .2em;
+    display: inline-block;
+    margin: .2em .2em;
     border: 1px solid #ddd;
     padding: .4em .8em;
-    box-shadow: 3px 3px 15px #9f9f9f;
+    box-shadow: 3px 3px 12px #9f9f9f;
 }
 
 #measurements .enable i {
@@ -60,7 +60,7 @@ div.plot-container .close:active  {
 
 #measurements .enable:hover {
     cursor: pointer;
-    box-shadow: 3px 3px 15px #aa9d70;
+    box-shadow: 3px 3px 12px #aa9d70;
     -webkit-transition: box-shadow ease 200ms;
     -moz-transition: box-shadow ease 200ms;
     
@@ -69,8 +69,10 @@ div.plot-container .close:active  {
 #measurements .enable:active {
     cursor: pointer;
     -webkit-transform: translate(3px, 3px);
-    box-shadow: 1px 1px 5px #9f9f9f;
+    -moz-transform: translate(3px, 3px);
+    box-shadow: 1px 1px 3px #9f9f9f;
     -webkit-transition: box-shadow ease 50ms;
+    -moz-transition: box-shadow ease 50ms;
 }
 
 div.ylabel {

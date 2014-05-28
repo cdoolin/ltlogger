@@ -1,19 +1,31 @@
 from webui import *
 import zmq.green as zmq
+import numpy
+import numpy.random as random
 
+
+# turns off zmq server.
+# TODO: turn off webserver too.
 GO = True
 
 #
 #  Measurement Database
 #
 
+N = 100
+xs = numpy.linspace(0, 6, N)
+
+def rand(a, b):
+    # generate uniform random number in [a, b)
+    return (float(b) - a) * random.rand(N) + a
+
+names = ["Valve", "Temperature", "Pressure", "Transmission"]
 measurements = {
-    'T1': [295., 200., 180., 160, 100., 90., 92., 88., 75.,],
-    'T2': [294., 188., 178., 172., 150., 132., 133., 110.],
-    'Valve': [1, 1, 1, 0, 1, 0, 0, 1, 1, 1, 0, 0, 0],
-}
+    ("%s_%d" % (names[int(random.rand()*len(names))], random.rand()*20)):
+        list(rand(30, 80) + (random.rand() - 0.5) * 800. / 6. * xs)
+            for i in range(10) }
 
-
+print measurements.keys()
 #
 # ZMQ Server Stuff
 #
@@ -25,9 +37,11 @@ sock.bind("tcp://*:2173")
 
 # functions to handle various commands given to the server
 # through zmq.  these functions must send a single message
-# back through the socket or zmq will lock
+# back through the socket so the zmq server can start 
+# receiveing the next message.
 
-# all arguments received as strings
+# arguments passed to functions as strings so remember to
+# convert them to the appropriate type.
 
 def ping(*args):
     sock.send("pong")
@@ -47,6 +61,9 @@ def get(name):
     sock.send("get")
     print("get %s" % name)
 
+
+# dictionary maps the command string in a zmq message
+# to the correct python function.
 zmqcommands = {
     "ping": ping,
     "put": put,
@@ -86,7 +103,8 @@ def logserver():
 
 @action
 def get_measurements():
-    ui.update_measurements(names=measurements.keys())
+    names = sorted(measurements.keys())
+    ui.update_measurements(names=names)
 
 @action
 def get_data(name):
@@ -98,7 +116,6 @@ def get_data(name):
 @action
 def connected():
     get_measurements()
-
 
 
 # configure webserver on port 2172

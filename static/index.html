@@ -31,18 +31,22 @@
 <!-- Templates to render HTML from Javscript using handlebars.js -->
 <!-- -->
 
+<!-- iterate over {{names}} of measurements supplied by python -->
+<!-- to generate html for showing minimized buttons.           -->
 <script type="text/x-handlebars-template", id="measurements_template">
 {{#names}}
     <span id="{{.}}-enable" class="enable"><i class="fa fa-plus"></i> {{.}}</span>
 {{/names}}
 </script>
 
+<!-- iterate over {{names}} of measurements supplied by python -->
+<!-- to generate html for plotting measurement data.           -->
 <script type="text/x-handlebars-template", id="plots_template">
 {{#names}}
 <div id="{{.}}-plot" class="plot-container">
     <div class="ylabel">Y label</div>
-    <span class="close"><i class="fa fa-times"></i></span>
-    <div class="plot"></div>
+    <div class="close"><i class="fa fa-times"></i></div>
+    <div class="flot"></div>
 </div>
 {{/names}}
 </script>
@@ -53,11 +57,12 @@
 <!-- -->
 
 <body>
+    <div id="measurements">
+    </div>
+    
     <div id="plots">
     </div>
     
-    <div id="measurements">
-    </div>
 </body>
 
 </html>
