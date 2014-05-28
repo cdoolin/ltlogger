@@ -10,31 +10,36 @@
         this.name = name;
 //        console.log("initing " + name);
         
-        this.checkel = $("#" + this.name + "-check");
-        this.checkel.change(this.check_change.bind(this));
+        this.enable_el = $("#" + this.name + "-enable");
+        this.enable_el.click(this.enable.bind(this));
+        this.enable_el.hide();
         
-        this.plotel = $("#" + this.name + "-plot");
+        // div containing labels and flot
+        this.plot_el = $("#" + this.name + "-plot");
+        $(".close", this.plot_el).click(this.disable.bind(this));
+        $(".ylabel", this.plot_el).html(this.name);
         
         this.get_data();
         
-        var plotopts = {
-            yaxis: {
-            }
-        };
+        var plotopts = {};
         this.data = [];
-        this.plot = $.plot(this.plotel, this.data, plotopts);
+        this.plot = $.plot($(".plot", this.plot_el), this.data, plotopts);
+        
+        $(window).resize(function () {
+            this.plot.resize();
+            this.plot.setupGrid();
+            this.plot.draw();
+        }.bind(this));
     }
     
-    Measurement.prototype.checked = function () {
-        return this.checkel.prop("checked");
+    Measurement.prototype.enable = function () {
+        this.enable_el.hide();
+        this.plot_el.show();
     };
-            
-    Measurement.prototype.check_change = function (e) {
-        if (this.checked()) {
-            this.plotel.show();
-        } else {
-            this.plotel.hide();
-        }
+    
+    Measurement.prototype.disable = function () {
+        this.plot_el.hide();
+        this.enable_el.show();
     };
     
     Measurement.prototype.get_data = function () {

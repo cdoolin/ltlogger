@@ -1,9 +1,6 @@
 // for jslint
 /*global $, webui, console, Handlebars, Measurement*/
 
-// initialize Foundation
-$(document).foundation();
-
 // wrap in the jquery function so this script is only run
 // once the webpage has loaded
 var templates = {};
