@@ -38,14 +38,14 @@ div.plot-container .close:active  {
     -moz-transition: color ease 50ms;
 }
 
-#measurements {
+#enables {
 /*    margin-top: 0em;*/
     -webkit-user-select: none;
     -moz-user-select: none;
     user-select: none;
 }
 
-#measurements .enable {
+#enables .enable {
 /*    float: left;*/
     display: inline-block;
     margin: .2em .2em;
@@ -54,11 +54,11 @@ div.plot-container .close:active  {
     box-shadow: 3px 3px 12px #9f9f9f;
 }
 
-#measurements .enable i {
+#enables .enable i {
     margin-right: .2em;
 }
 
-#measurements .enable:hover {
+#enables .enable:hover {
     cursor: pointer;
     box-shadow: 3px 3px 12px #aa9d70;
     -webkit-transition: box-shadow ease 200ms;
@@ -66,7 +66,7 @@ div.plot-container .close:active  {
     
 }
 
-#measurements .enable:active {
+#enables .enable:active {
     cursor: pointer;
     -webkit-transform: translate(3px, 3px);
     -moz-transform: translate(3px, 3px);

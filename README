@@ -1,18 +1,19 @@
 after cloning repository run
-
-git submodule init
-git submodule update
-
+  git submodule init
+  git submodule update
 to download webui.
 
 needs these python modules (at least):
-bottle
-gevent
-gevent-websocket
-pyzmq
-
+  bottle
+  gevent
+  gevent-websocket
+  pyzmq
 
 on windows w/ anaconda:
-pip install bottle
+  pip install bottle
 (from cmd)
+
+to speed up gevent-websockets install
+  wsaccel
+  ujson
 
