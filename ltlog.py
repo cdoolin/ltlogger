@@ -99,13 +99,15 @@ def put(name, value, timestamp=""):
 
     put;<name>;<value>;<timestamp>
     """
-    timestamp = float(timestamp)
+    # use config to create table for measurements if it doesn't exist
     if name not in measurements:
-        measurements[name] = logfile.create_table("/measurements",
-            name, description(tables.Float64Col))
-        subscriptions[name] = Caller([])
+        config(name)
+
+    # if first datapoint,  update ui
+    timestamp = float(timestamp)
+    if measurements[name].nrows < 1:
         uis.update_measurements(measurements={
-                name: (timestamp*1000., timestamp*1000.)})
+                name: {'ta': timestamp*1000., 'tb': timestamp*1000.}})
 
     row = measurements[name].row
     row['time'] = float(timestamp)
@@ -132,12 +134,29 @@ def get(name):
     print("get %s" % name)
 
 
+def config(name, label="", units=""):
+    # configures metadata for measurement.
+    if name not in measurements:
+       measurements[name] = logfile.create_table("/measurements",
+           name, description(tables.Float64Col))
+       subscriptions[name] = Caller([])
+
+    measurements[name].title = label
+    measurements[name].attrs.units = units
+
+    uis.update_measurements(measurements={
+        name: {'label': label, 'units': units}
+    })
+    sock.send("config")
+   
+
 # dictionary maps the command string in a zmq message
 # to the correct python function.
 zmqcommands = {
     "ping": ping,
     "put": put,
     "get": get,
+    "config": config,
 }
 
 @gthread
@@ -188,10 +207,10 @@ def unsubscribe(name):
 @action
 def get_measurements():
     uis.update_measurements(measurements={
-        name: (
-            table[0]['time'] * 1000.,
-            table[-1]['time'] * 1000.,
-        ) for name, table in measurements.iteritems()
+        name: {
+            'ta': table[0]['time'] * 1000.,
+            'tb': table[-1]['time'] * 1000.,
+        } for name, table in measurements.iteritems()
     })
 
 def downsample(data, n):
@@ -211,9 +230,9 @@ def get_data(name, ta, tb=-1, n=4096):
     """
     request data for a measurement
     """
-    c = "(time > %f)" % float(ta / 1000.)
+    c = "(time >= %f)" % float(ta / 1000.)
     if tb >= 0:
-        c += " & (time < %f)" % float(tb / 1000.)
+        c += " & (time <= %f)" % float(tb / 1000.)
 
     data = [(r['time'] * 1000., r['value'])
                       for r in measurements[name].where(c)]
@@ -236,9 +255,9 @@ def get_datas(times):
     """
     datas = {}
     for name, (ta, tb) in times.iteritems():
-        c = "(time > %f)" % float(ta / 1000.)
+        c = "(time >= %f)" % float(ta / 1000.)
         if tb >= 0:
-            c += " && (time < %f)" % float(tb / 1000.)
+            c += " && (time <= %f)" % float(tb / 1000.)
         datas[name] = [(r['time'] * 1000., r['value'])
                           for r in measurements[name].where(c)]
     uis.update_datas(datas=datas)
@@ -247,10 +266,12 @@ def get_datas(times):
 @action
 def connected():
     ui.update_measurements(measurements={
-        name: (
-            table[0]['time'] * 1000.,
-            table[-1]['time'] * 1000.,
-        ) for name, table in measurements.iteritems()
+        name: {
+            'ta': table[0]['time'] * 1000.,
+            'tb': table[-1]['time'] * 1000.,
+            'label': table.title,
+            'units': table.attrs.units,
+        } for name, table in measurements.iteritems()
     })
 
 
