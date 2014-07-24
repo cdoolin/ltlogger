@@ -8,6 +8,7 @@ pars.add_argument("name")
 pars.add_argument("-s", "--server", action="store", default="localhost")
 pars.add_argument("--label", "-l", type=str, default="")
 pars.add_argument("--units", "-u", type=str, default="")
+pars.add_argument("--every", "-e",  type=float, default=2)
 args = pars.parse_args()
 
 import ltclient
@@ -19,4 +20,4 @@ c.config(args.name, args.label, args.units)
 
 while True:
     c.put(args.name, random.random())
-    sleep(2)
+    sleep(args.every)
