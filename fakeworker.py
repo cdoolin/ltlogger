@@ -6,19 +6,17 @@ import random
 pars = argparse.ArgumentParser()
 pars.add_argument("name")
 pars.add_argument("-s", "--server", action="store", default="localhost")
+pars.add_argument("--label", "-l", type=str, default="")
+pars.add_argument("--units", "-u", type=str, default="")
 args = pars.parse_args()
 
+import ltclient
 
-context = zmq.Context()
+c = ltclient.LTClient(server=args.server)
 
-sender = context.socket(zmq.REQ)
-sender.connect("tcp://%s:2173" % args.server)
+c.config(args.name, args.label, args.units)
 
 
 while True:
-    msg = "%s;%s;%f;%d" % ("put", args.name, random.random(), int(time()))
-    print(msg)
-    sender.send(msg)
-    sender.recv()
+    c.put(args.name, random.random())
     sleep(2)
-

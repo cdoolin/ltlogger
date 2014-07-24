@@ -8,12 +8,16 @@
 
     var the_future = -1;
 
-    function Measurement(name, ta, tb) {
+    function Measurement(name, attrs) {
         // data stuff
         // name is unique identifying the instrument taking the data.
         this.name = name;
-        this.ta = ta;
-        this.tb = tb;
+        // ta, tb required properties of attrs
+        this.ta = attrs.ta;
+        this.tb = attrs.tb;
+        // will update later if supplied
+        this.label = "";
+        this.units = "";
         this.data = [];
 
         if (this.ta < Measurement.t0 || Measurement.t0 === undefined)
@@ -21,9 +25,12 @@
         if (this.tb > Measurement.t3 || Measurement.t3 === undefined)
             Measurement.t3 = this.tb;
 
-
-        // plot stuff
+        // load enabled state from cookies
         this.enabled = Boolean($.cookie(this.name));
+
+        //
+        // generate html
+        //
 
         // enable element is the minimized measurement name which
         // can be clicked to start plotting.
@@ -35,7 +42,11 @@
         this.plot_el = $(templates.plot({name: this.name}));
         $("#plots").append(this.plot_el);
         $(".close", this.plot_el).click(this.disable.bind(this));
-        $(".ylabel", this.plot_el).html(this.name);
+
+        this.update_label(attrs.label, attrs.units);
+
+
+
 
         var plotopts = {
             xaxis: {mode: 'time', timezone: "browser"},
@@ -179,6 +190,22 @@
         Measurement.redraw();
     };
 
+    Measurement.prototype.update_label = function (label, units) {
+        if (label !== undefined)
+            this.label = label;
+        if (units !== undefined)
+            this.units = units;
+
+        var ylabel = this.name;
+        if (this.label.length > 0)
+            ylabel = this.label;
+
+        if (this.units.length > 0)
+            ylabel += " (" + this.units + ")";
+
+        $(".ylabel", this.plot_el).html(ylabel);
+    };
+
 
     //
     // Static properties of Measurement
@@ -190,16 +217,17 @@
     Measurement.s_active = {};
 
     Measurement.update_measurements = function (args) {
-        console.log(args);
-        $.each(args.measurements, function (name, times) {
+        $.each(args.measurements, function (name, attrs) {
             if (Measurement.s[name] === undefined) {
                 Measurement.s[name] =
-                    new Measurement(name, times[0], times[1]);
+                    new Measurement(name, attrs);
             } else {
-                if (times[0] < Measurement.s[name].ta)
-                    Measurement.s[name].ta = times[0];
-                if (times[1] > Measurement.s[name].tb)
-                    Measurement.s[name].tb = times[0];
+                if (attrs.ta < Measurement.s[name].ta)
+                    Measurement.s[name].ta = attrs.ta;
+                if (attrs.tb > Measurement.s[name].tb)
+                    Measurement.s[name].tb = attrs.tb;
+                if (attrs.label !== undefined || attrs.units !== undefined)
+                    Measurement.s[name].update_label(attrs.label, attrs.units);
             }
         });
 
@@ -260,7 +288,6 @@
     };
 
     Measurement.got_data = function (args) {
-        console.log(args);
         if (Measurement.s[args.name] !== undefined)
             Measurement.s[args.name].got_data(args.data, args.downsampled);
     };
