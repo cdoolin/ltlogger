@@ -46,13 +46,11 @@
         this.update_label(attrs.label, attrs.units);
 
 
-
-
         var plotopts = {
             xaxis: {mode: 'time', timezone: "browser"},
             selection: {mode: 'x'},
             series: {
-                points: {show: true},
+                points: {show: false},
                 lines: {show: true}
             }
         };
@@ -83,6 +81,7 @@
         this.plot_el.show();
 
         Measurement.s_active[this.name] = this;
+        this.req_lim(Measurement.t0, Measurement.t3);
         webui.call("subscribe", {name: this.name});
 
         this.enabled =  true;
