@@ -148,7 +148,7 @@ def config(name, label="", units=""):
         name: {'label': label, 'units': units}
     })
     sock.send("config")
-   
+
 
 # dictionary maps the command string in a zmq message
 # to the correct python function.
@@ -271,7 +271,7 @@ def connected():
             'tb': table[-1]['time'] * 1000.,
             'label': table.title,
             'units': table.attrs.units,
-        } for name, table in measurements.iteritems()
+        } for name, table in measurements.iteritems() if table.nrows > 0
     })
 
 
