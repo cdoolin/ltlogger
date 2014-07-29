@@ -8,6 +8,7 @@ needs these python modules (at least):
   gevent
   gevent-websocket
   pyzmq
+  pytables
 
 on windows w/ anaconda:
   pip install bottle
