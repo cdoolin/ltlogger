@@ -21,6 +21,8 @@ pars.add_argument("--load", "-l", action="store", default="", type=str,
     help="load and continue saving data to this .h5 file")
 pars.add_argument("--verbose", "-v", action="store_true", default=False,
     help="enable verbose logging.")
+pars.add_argument("--port", "-p", type=int, default=2172,
+    help="set port of webserver (default: 2172)")
 args = pars.parse_args()
 
 # configure webui logging
@@ -276,7 +278,7 @@ def connected():
 
 
 # configure webserver on port 2172
-serv = server(2172)
+serv = server(args.port)
 # start zmq server loop
 logserver()
 # start web server loop
