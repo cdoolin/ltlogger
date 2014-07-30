@@ -166,8 +166,8 @@
     };
 
     Measurement.prototype.update_data = function (data) {
-        // new datapoint has been measured
-        if (data.length < 1)
+        // new datapoint has been measured and should be added to plot
+        if (data.length < 1 || !Measurement.active)
             return;
 
         if (this.data.length > 0) {
@@ -178,15 +178,18 @@
         var t3 = data[data.length-1][0];
         if (t3 > Measurement.t3) {
             Measurement.t3 = t3;
-            if (Measurement.active)
-                Measurement.t2 = t3;
+            Measurement.t2 = t3;
         }
         if (t3 > this.tb)
             this.tb = t3;
 
-        this.data = this.data.concat(data);
 
-        Measurement.redraw();
+        if (this.data.length + 1> Measurement.number_datas() * 1.4){
+            this.req_lim(Measurement.t1, Measurement.t2);
+        } else {
+            this.data = this.data.concat(data);
+            Measurement.redraw();
+        }
     };
 
     Measurement.prototype.update_label = function (label, units) {
@@ -235,6 +238,7 @@
     };
 
     Measurement.update_data = function (args) {
+        // called when a new datapoint has been given to the server
         if (Measurement.s[args.name] !== undefined) {
             Measurement.s[args.name].update_data(args.data);
         } else {
@@ -287,6 +291,7 @@
     };
 
     Measurement.got_data = function (args) {
+        // called after a new range of data has been retrieved from the server
         if (Measurement.s[args.name] !== undefined)
             Measurement.s[args.name].got_data(args.data, args.downsampled);
     };
