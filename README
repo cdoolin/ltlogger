@@ -1,3 +1,6 @@
+Installing
+==========
+
 after cloning repository run
   git submodule init
   git submodule update
@@ -18,3 +21,9 @@ to speed up gevent-websockets install
   wsaccel
   ujson
 
+
+Running
+=======
+
+
+python ltlog.py -l /srv/share/Fridge/ltlogs/16.02.08.h5 -p 3389

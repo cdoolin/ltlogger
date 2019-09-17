@@ -23,6 +23,9 @@ pars.add_argument("--verbose", "-v", action="store_true", default=False,
     help="enable verbose logging.")
 pars.add_argument("--port", "-p", type=int, default=2172,
     help="set port of webserver (default: 2172)")
+pars.add_argument("--zmqport", type=int, default=2173,
+    help="set port of zmq listener (default: 2173)")
+
 args = pars.parse_args()
 
 # configure webui logging
@@ -79,7 +82,7 @@ def description(valuecol):
 # initialize zmq socket in request / reply mode
 context = zmq.Context()
 sock = context.socket(zmq.REP)
-sock.bind("tcp://*:2173")
+sock.bind("tcp://*:%d" % args.zmqport)
 
 # functions to handle various commands given to the server
 # through zmq.  these functions must send a single message
@@ -176,7 +179,7 @@ def logserver():
     """
     while GO:
         msg = sock.recv().split(';')
-        logger.info("zmq req %s" % str(msg))
+        #logger.info("zmq req %s" % str(msg))
         if msg[0] in zmqcommands:
             try:
                 zmqcommands[msg[0]](*msg[1:])

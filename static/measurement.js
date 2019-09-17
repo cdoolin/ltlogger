@@ -50,7 +50,7 @@
             xaxis: {mode: 'time', timezone: "browser"},
             selection: {mode: 'x'},
             series: {
-                points: {show: false},
+                points: {show: true},
                 lines: {show: true}
             }
         };
@@ -184,7 +184,7 @@
             this.tb = t3;
 
 
-        if (this.data.length + 1> Measurement.number_datas() * 1.4){
+        if (this.data.length + 1> Measurement.number_datas() * 1.2){
             this.req_lim(Measurement.t1, Measurement.t2);
         } else {
             this.data = this.data.concat(data);
@@ -234,7 +234,7 @@
         });
 
         if(Measurement.t1 === undefined || Measurement.t2 === undefined)
-            Measurement.set_lims();
+            Measurement.set_lims(Measurement.t1, Measurement.t2);
     };
 
     Measurement.update_data = function (args) {
@@ -265,7 +265,7 @@
     Measurement.t0 = undefined;
     Measurement.t3 = undefined;
     // plot limits so all plots have same time range
-    Measurement.t1 = undefined;
+    Measurement.t1 = Date.now() - 24*3600*1000.;
     Measurement.t2 = undefined;
     // wether plots should be updating with data in real time
     Measurement.active = true;
