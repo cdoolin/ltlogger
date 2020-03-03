@@ -5,6 +5,7 @@
 (function () {
     "use strict";
     /*global $, console, webui*/
+    console.log("hello");
 
     var the_future = -1;
 
@@ -108,7 +109,8 @@
         // the server.
 
         var N  = Measurement.number_datas();
-        if (this.downsampled === false &&
+        if (this.data.length > 0 &&
+            this.downsampled === false &&
             t1 >= this.data[0][0] &&
             t2 <= this.data[this.data.length-1][0]) {
             this.data = this.get_local_data(t1, t2);
