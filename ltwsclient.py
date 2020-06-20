@@ -62,14 +62,14 @@ class LTWebsockClient(object):
 
 if __name__ == '__main__':
     server = "onnes.ccis.ualberta.ca"
-    port = "3173"
+    port = "3172"
     print(f"connecting to {server}:{port}")
 
     lt = LTWebsockClient(server, port)
     print("connected")
-    print("measurement names {lt.names}")
+    print(f"all measurement names: {lt.names}")
 
     last_5min = lt.get_last_measurements(lt.names[0], 5*60)
 
-    print(f"measurements of '{lt.names[0]} from last 5 minutes:")
-    print(last_5min)
+    print(f"last measurement of {lt.names[0]} from last 5 minutes is")
+    print(last_5min[-1])
